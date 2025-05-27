@@ -80,6 +80,7 @@ class TaskBenchmark(object):
             self.task_name = args.task_name
         else:
             raise ValueError("Invalid task_name")
+        #可以在bddl中增加task_definitions任务，并设置task_name = all,运行所有任务
         tasks = sorted(
             [
                 item
@@ -99,6 +100,7 @@ class TaskBenchmark(object):
         return tasks
 
     def evaluate_policy(self):
+        #在task_to_preselected_scenes.json加场景可以在多个场景中运行模型
         task2scene_json = os.path.join(
             base_utils.benchmark_bddl_path(),
             "task_to_preselected_scenes.json",
@@ -141,6 +143,7 @@ class TaskBenchmark(object):
                     # one instance
                     self.task_config["scene"]["scene_instance_id"] = instance_id
 
+                    #TaskGenerator根据配置生成多个任务变体
                     task_generator = TaskGenerator(self.task_config)
                     task_folder = os.path.join(
                         base_utils.benchmark_root_path(),
@@ -151,6 +154,7 @@ class TaskBenchmark(object):
                         task_num=self.episodes_per_instance,
                         task_name=self.task_config["task"],
                     )
+                    #配置机器人在当前场景中的初始状态
                     robot_position = task_generator.robot_init_pose["position"]
                     robot_rotation = task_generator.robot_init_pose["quaternion"]
                     self.task_config["robot"]["robot_init_pose"][
